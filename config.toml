@@ -1,0 +1,18 @@
+[contract]
+# The address of the deployed WBI contract
+address = "0xa01380F4EEBC7eEE77Cc8F3E6E2115Ac32C42618"
+
+[account]
+# The ethereum address which will create the transactions
+# (needs to have a high enough balance)
+address = "0xfe1b2865B74200dCEABf9dDEE04FDc32c2C8E3FB"
+
+[witnet_node]
+# Address of the JSON-RPC server
+jsonrpc_ip = "127.0.0.1"
+jsonrpc_port = 1234
+
+[radon]
+# The radon encoding of the value "True"
+true_encoding = [203, 64, 191, 98, 145, 19, 64, 78, 165]
+
