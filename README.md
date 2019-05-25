@@ -22,3 +22,10 @@ python3 wbi_watch.py
 python3 wbi_post.py
 ```
 
+By default it will use the local ethereum testnet. This can be changed by
+setting the ethereum client address as an environment variable:
+
+```sh
+export WEB3_PROVIDER_URI="http://127.0.0.1:8545"
+```
+
