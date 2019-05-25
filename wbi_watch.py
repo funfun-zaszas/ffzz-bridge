@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import msgpack
 import socket
 import sys
 import time
@@ -47,10 +48,10 @@ def wait_for_witnet_dr_result():
             print(r)
             tally = r["params"]["result"]["txns"]["tally_txns"][0]
             dr_hash = tally["dr_pointer"]
-            tally_value = tally["tally"]
-            print(f"Data request {dr_hash} has result {tally_value}")
-            # Return True if the data request resolved to True, and False otherwise
-            return tally == config["radon"]["true_encoding"]
+            tally_value_raw = tally["tally"]
+            tally_value = msgpack.unpackb(bytes(tally_value_raw))
+            print(f"Data request {dr_hash} has result {tally_value_raw}")
+            return tally_value
         except Exception as e:
             print("No tally in block: " + str(e))
             pass
@@ -70,6 +71,7 @@ def handle_post_data_request(event):
 
     # Wait for the data request result
     dr_result = wait_for_witnet_dr_result()
+
     print(f"Reporting data request with id {dr_id} with result {dr_result}")
 
     account_addr = config["account"]["address"]
@@ -79,8 +81,19 @@ def handle_post_data_request(event):
 
     print(f"Got {balance} wei")
 
-    contract.functions.report_result(dr_id, dr_result).transact(
-        {"from": account_addr})
+    if dr_result in (True, False):
+        contract.functions.report_result(dr_id, dr_result).transact(
+            {"from": account_addr})
+    else:
+        try:
+            dr_result = int(dr_result)
+            # dr_result is an integer
+            contract.functions.report_result_election(dr_id, dr_result).transact(
+                {"from": account_addr})
+        except:
+            print(f"Unsupported result type: {dr_result}")
+
+
     print("Data request successfully relayed to Ethereum!")
 
 
