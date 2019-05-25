@@ -4,7 +4,7 @@ Bridge component to forward data requests between Ethereum contracts and Witnet
 ## Requirements
 
 ```sh
-pip3 install toml web3
+pip3 install msgpack toml web3
 ```
 
 ## Usage
@@ -19,7 +19,7 @@ python3 wbi_watch.py
 
 # Post a data request
 # (can be skipped if the data request will be posted externally)
-python3 wbi_post.py
+python3 wbi_post.py data_requests/air_quality.json
 ```
 
 By default it will use the local ethereum testnet. This can be changed by
